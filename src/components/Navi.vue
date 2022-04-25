@@ -1,7 +1,8 @@
 <template>
   <div class="navi">
     <el-menu class="header" mode="horizontal" router>
-      <el-menu-item index="/" class="menu-item">Home</el-menu-item>
+      <el-menu-item index="/Home" class="menu-item">
+        主页</el-menu-item>
       <el-menu-item index="/studentIntroduce" class="menu-item"
         >个人简历</el-menu-item
       >

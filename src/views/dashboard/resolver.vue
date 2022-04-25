@@ -37,9 +37,7 @@
         class="table-content"
         style="width: 100%"
         size="mini"
-        :data="
-          tableList.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-        "
+        :data="tableList"
         border
       >
         <el-table-column
@@ -67,11 +65,11 @@
             </div>
             <div v-if="col.type === 'link'">
               <el-button
-                type="primary"
+                type="text"
                 @click="navigate(scope.$index, col.prop)"
                 style="margin-right: 5px"
                 size="mini"
-                >{{ col.label }}</el-button
+                >{{ scope.row[col.prop] }}</el-button
               >
             </div>
             <div v-if="col.type === 'opers'">
@@ -88,9 +86,10 @@
                   size="mini"
                   >编辑</el-button
                 >
+
                 <el-button
                   type="success"
-                  v-if="c.name == 'detail'"
+                  v-else-if="c.name == 'detail'"
                   @click="detailRow(scope.row.id)"
                   style="margin-right: 5px"
                   size="mini"
@@ -98,11 +97,19 @@
                 >
                 <el-button
                   type="danger"
-                  v-if="c.name == 'delete'"
+                  v-else-if="c.name == 'delete'"
                   @click="deleteRow(scope.row.id)"
                   style="margin-right: 5px"
                   size="mini"
                   >删除</el-button
+                >
+                <el-button
+                  type="primary"
+                  v-else
+                  @click="pushRow(scope.$index, c.name)"
+                  style="margin-right: 5px"
+                  size="mini"
+                  >{{ c.label }}</el-button
                 >
               </div>
             </div>
@@ -287,6 +294,14 @@ export default {
                 for (var i = 0; i < _self.formList.length; i++) {
                   if (pro == _self.formList[i].prop) {
                     _self.formList[i].value = _self.form[pro];
+                    if (_self.formList[i].type == "select") {
+                      if (
+                        _self.form[pro + "List"] != undefined &&
+                        _self.form[pro + "List"] != ""
+                      ) {
+                        _self.formList[i].option = _self.form[pro + "List"];
+                      }
+                    }
                   }
                 }
               }
@@ -350,6 +365,14 @@ export default {
                   for (var i = 0; i < _self.formList.length; i++) {
                     if (pro == _self.formList[i].prop) {
                       _self.formList[i].value = _self.form[pro];
+                      if (_self.formList[i].type == "select") {
+                        if (
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
+                        ) {
+                          _self.formList[i].option = _self.form[pro + "List"];
+                        }
+                      }
                     }
                   }
                 }
@@ -360,7 +383,99 @@ export default {
       });
     },
     navigate(index, prop) {
-      var query = this.tableList[index][prop];
+      var query = this.tableList[index][prop + "Paras"];
+      var vars = query.split("&");
+      this.objectPush = {};
+      this.modeName = "";
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (i == 0) {
+          this.modeName = pair[1];
+        } else {
+          var key = pair[0];
+          var value = pair[1];
+          var obj = {};
+          obj[key] = value;
+
+          Object.assign(this.objectPush, obj);
+        }
+      }
+
+      if (this.modeName == "introduce") {
+        this.$router.push({
+          path: "studentIntroduce",
+          query: this.objectPush,
+        });
+      } else {
+        let _self = this;
+
+        getUimsConfig().then((res) => {
+          var jsonObj = res.data.data;
+          _self.page = jsonObj.uims.page;
+          var data = {};
+          for (var i = 0; i < _self.page.length; i++) {
+            if (this.modeName === _self.page[i].name) {
+              if (_self.page[i].type == "table") {
+                _self.showTable = "1";
+                _self.showForm = "0";
+                _self.name = _self.page[i].name;
+                _self.colsList = _self.page[i].item;
+                if (_self.page[i].query != undefined) {
+                  if (Array.isArray(_self.page[i].query)) {
+                    _self.querList = _self.page[i].query;
+                  } else {
+                    let arr = [];
+                    arr.push(_self.page[i].query);
+                    _self.querList = arr;
+                  }
+
+                  _self.showQuery = "1";
+                } else {
+                  _self.showQuery = "";
+                }
+                _self.showAdd = _self.page[i].showAdd;
+                _self.showPagination = _self.page[i].showPagination;
+                var url = "/api/" + _self.rootUrl + "/" + _self.name + "Init";
+                Object.assign(data, this.objectPush);
+                generalRequest(url, data).then((res) => {
+                  _self.tableList = res.data.data;
+                });
+              }
+              if (_self.page[i].type == "form") {
+                _self.showForm = "1";
+                _self.showTable = "0";
+                _self.name = _self.page[i].name;
+                _self.formName = _self.page[i].title;
+                _self.formList = _self.page[i].item;
+                _self.id = "";
+                var urlF = "/api/" + _self.rootUrl + "/" + _self.name + "Init";
+                Object.assign(data, this.objectPush);
+                generalRequest(urlF, data).then((res) => {
+                  _self.form = res.data.data;
+                  for (var pro in _self.form) {
+                    for (var i = 0; i < _self.formList.length; i++) {
+                      if (pro == _self.formList[i].prop) {
+                        _self.formList[i].value = _self.form[pro];
+                        if (_self.formList[i].type == "select") {
+                          if (
+                            _self.form[pro + "List"] != undefined &&
+                            _self.form[pro + "List"] != ""
+                          ) {
+                            _self.formList[i].option = _self.form[pro + "List"];
+                          }
+                        }
+                      }
+                    }
+                  }
+                });
+              }
+            }
+          }
+        });
+      }
+    },
+    pushRow(index, prop) {
+      var query = this.tableList[index][prop + "Paras"];
       var vars = query.split("&");
       this.objectPush = {};
       this.modeName = "";
@@ -427,6 +542,14 @@ export default {
                   for (var i = 0; i < _self.formList.length; i++) {
                     if (pro == _self.formList[i].prop) {
                       _self.formList[i].value = _self.form[pro];
+                      if (_self.formList[i].type == "select") {
+                        if (
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
+                        ) {
+                          _self.formList[i].option = _self.form[pro + "List"];
+                        }
+                      }
                     }
                   }
                 }
@@ -462,6 +585,14 @@ export default {
                 for (var i = 0; i < _self.formList.length; i++) {
                   if (pro == _self.formList[i].prop) {
                     _self.formList[i].value = _self.form[pro];
+                    if (_self.formList[i].type == "select") {
+                      if (
+                        _self.form[pro + "List"] != undefined &&
+                        _self.form[pro + "List"] != ""
+                      ) {
+                        _self.formList[i].option = _self.form[pro + "List"];
+                      }
+                    }
                   }
                 }
               }
@@ -496,6 +627,14 @@ export default {
                 for (var i = 0; i < _self.formList.length; i++) {
                   if (pro == _self.formList[i].prop) {
                     _self.formList[i].value = _self.form[pro];
+                    if (_self.formList[i].type == "select") {
+                      if (
+                        _self.form[pro + "List"] != undefined &&
+                        _self.form[pro + "List"] != ""
+                      ) {
+                        _self.formList[i].option = _self.form[pro + "List"];
+                      }
+                    }
                   }
                 }
               }
@@ -506,8 +645,10 @@ export default {
     },
     deleteRow(id) {
       var url = "/api/" + this.rootUrl + "/" + this.name + "Delete";
-      for (var i = 0; i < this.tableList; i++) {
-        if (this.tableList[i].id == id) this.index = i;
+      for (var i = 0; i < this.tableList.length; i++) {
+        if (this.tableList[i].id == id) {
+          this.index = i;
+        }
       }
       var data = { id: id };
       this.tableList.splice(this.index, 1);
@@ -587,6 +728,14 @@ export default {
                 for (var i = 0; i < _self.formList.length; i++) {
                   if (pro == _self.formList[i].prop) {
                     _self.formList[i].value = _self.form[pro];
+                    if (_self.formList[i].type == "select") {
+                      if (
+                        _self.form[pro + "List"] != undefined &&
+                        _self.form[pro + "List"] != ""
+                      ) {
+                        _self.formList[i].option = _self.form[pro + "List"];
+                      }
+                    }
                   }
                 }
               }

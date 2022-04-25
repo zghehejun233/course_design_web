@@ -25,19 +25,24 @@ import
       <div class="topMask square"></div>
       <div class="topMask circular"></div>
     </el-card>
+    <el-button size="primary" class="deleteButton" @click="downPDF()"
+      >下载</el-button
+    >
   </div>
 </template>
 
 <script>
 import Navi from "@/components/Navi";
 import { getStudentIntroduceData } from "@/service/genServ.js";
+import { downloadPost } from "@/service/genServ.js";
 export default {
   name: "Home",
   components: {
     Navi,
   },
   created() {
-    getStudentIntroduceData().then((res) => {
+    this.objectPush = this.$route.query;
+    getStudentIntroduceData({ ...this.objectPush }).then((res) => {
       this.myName = res.data.data.myName;
       this.overview = res.data.data.overview;
       this.attachList = res.data.data.attachList;
@@ -45,12 +50,21 @@ export default {
   },
   data() {
     return {
+      objectPush: "",
       myName: "",
       overview: "",
       attachList: "",
     };
   },
-  methods: {},
+  methods: {
+    downPDF() {
+      downloadPost(
+        "http://47.100.74.245/api/teach/getStudentIntroducePdf",
+        "个人简历",
+        { ...this.objectPush }
+      );
+    },
+  },
 };
 </script>
 <style scoped>

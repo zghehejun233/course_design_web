@@ -1,6 +1,5 @@
 import axios from "axios";
 import { store } from "@/store/createStore.js"
-import router from '@/router/index.js'
 import { ElMessage } from 'element-plus'
 
 function generalRequest(url, data) {
@@ -16,24 +15,23 @@ function generalRequest(url, data) {
             }
         }
     ).then(res => {
-        if (res.status != 200) {
+        if (res.status == 500) {
 
             ElMessage({
                 type: 'warnning',
-                message: '网络错误'
+                message: '后端报错'
             });
-            store.commit('logout')
-            router.push('/login')
+            return;
+        }
+        if (res.status == 404) {
+            ElMessage({
+                type: 'warnning',
+                message: '后端方法不存在'
+            });
             return;
         }
         return res.data
     }).catch(() => {
-        ElMessage({
-            type: 'warnning',
-            message: '网络错误'
-        });
-        store.commit('logout')
-        router.push('/login')
         return;
     })
 }
@@ -42,8 +40,8 @@ function getUimsConfig() {
     return generalRequest('/api/auth/getUimsConfig', null)
 }
 
-function getStudentIntroduceData() {
-    return generalRequest('/api/teach/getStudentIntroduceData', null)
+function getStudentIntroduceData(data) {
+    return generalRequest('/api/teach/getStudentIntroduceData', data)
 }
 
 

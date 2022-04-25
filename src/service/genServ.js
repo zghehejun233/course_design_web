@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 
 function generalRequest(url, data) {
     return axios.post(
-        'http://localhost:9090' + url,
+        'http://47.100.74.245' + url,
         // url,
         {
             data: data

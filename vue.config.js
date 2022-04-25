@@ -13,6 +13,5 @@ module.exports = {
 
     },
   },
-  outputDir: 'E:\\NewTeachFrame\\java-client\\dist',
-  // outputDir: 'C:\\teach\\teach-server\\src\\main\\resources\\public'
+  outputDir: './dist/',
 }   

@@ -13,14 +13,19 @@ import
         <div>
           {{ overview }}
         </div>
-        <el-row :gutter="110" v-for="(item, i) in attachList" :key="i">
-          <el-col :span="88">
-            <span class="large">{{ item.title }}</span>
-            <div class="grid-content bg-purple">
-              {{ item.content }}
-            </div>
-          </el-col>
-        </el-row>
+        <div class="img">
+          <img :src="img_url" />
+        </div>
+        <div>
+          <el-row :gutter="110" v-for="(item, i) in attachList" :key="i">
+            <el-col :span="88">
+              <span class="large">{{ item.title }}</span>
+              <div class="grid-content bg-purple">
+                <p v-html="item.content"></p>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
       </div>
       <div class="topMask square"></div>
       <div class="topMask circular"></div>
@@ -45,6 +50,7 @@ export default {
     getStudentIntroduceData({ ...this.objectPush }).then((res) => {
       this.myName = res.data.data.myName;
       this.overview = res.data.data.overview;
+      this.img_url = res.data.data.img_url;
       this.attachList = res.data.data.attachList;
     });
   },
@@ -68,6 +74,10 @@ export default {
 };
 </script>
 <style scoped>
+.img {
+  padding: auto;
+  height: 100px;
+}
 .aboutus {
   font-size: 14px;
   text-align: left;

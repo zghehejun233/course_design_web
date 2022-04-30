@@ -89,7 +89,7 @@ export default {
           _self.name = _self.page[i].name;
           _self.formName = _self.page[i].formName;
           _self.formList = _self.page[i].formList;
-           console.log(_self.formList)
+          console.log(_self.formList);
         }
       }
       var data = {};
@@ -103,7 +103,6 @@ export default {
             }
           }
         }
-       
       });
     });
   },
@@ -112,9 +111,9 @@ export default {
       this.getXml(title);
     },
     getXml(title) {
-    let _self = this;
-     getUimsConfig().then((res) => {
-      var jsonObj = JSON.parse(res.data.data);
+      let _self = this;
+      getUimsConfig().then((res) => {
+        var jsonObj = JSON.parse(res.data.data);
         _self.page = jsonObj.ums.page;
         for (var i = 0; i < _self.page.length; i++) {
           if (title === _self.page[i].title) {
@@ -154,7 +153,10 @@ export default {
             type: "success",
           });
         } else {
-          this.$message.error("提交失败");
+          this.$message({ 
+            message: "${res.message}", 
+            type: "error",
+            });
         }
       });
     },

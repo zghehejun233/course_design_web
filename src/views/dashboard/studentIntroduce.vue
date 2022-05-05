@@ -117,7 +117,7 @@ export default {
   methods: {
     downPDF() {
       downloadPost(
-        "http://localhost:9090/api/teach/getStudentIntroducePdf",
+        "http:/47.100.74.245/api/teach/getStudentIntroducePdf",
         "个人简历",
         { ...this.objectPush }
       );

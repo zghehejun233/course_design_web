@@ -43,7 +43,7 @@ export default {
     },
     downPDF() {
       downloadPost(
-          "http://localhost:9090/api/teach/printStudentIntroduce",
+          "http://47.100.74.245/api/teach/printStudentIntroduce",
           "个人简历"
       );
     },

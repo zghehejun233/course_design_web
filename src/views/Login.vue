@@ -48,10 +48,14 @@
 
     </el-card>
   </div>
+<canvas></canvas>
 
 </template>
 
 <script>
+
+
+
 export default {
   name: "Login",
   data() {

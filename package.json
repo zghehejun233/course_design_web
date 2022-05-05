@@ -10,6 +10,7 @@
     "electron_build": "electron-packager ./dist test --platform=win32 --arch=x64 --overwrite --icon=./public/favicon.ico"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^1.1.4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.55",

@@ -1,214 +1,237 @@
 <template>
-  <Navi @title="getT" />
-  <div class="app-container">
-    <div v-if="showTable == 1">
-      <div v-if="showQuery == 1" style="margin-bottom: 5px">
-        <div
-          v-for="(item, index) in querList"
-          :key="index"
-          style="display: inline-block"
-        >
-          {{ item.label }}
-          <el-input
-            v-if="item.type == 'input'"
-            v-model="item.value"
-            style="width: 60%"
-          />
-          <el-select
-            v-if="item.type == 'select'"
-            v-model="item.value"
-            placeholder="请选择"
-            style="width: 60%"
-          >
-            <el-option
-              v-for="items in item.option"
-              :key="items.value"
-              :label="items.label"
-              :value="items.value"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <el-button size="mini" class="commButton" @click="queryTable()"
-          >查询</el-button
-        >
-      </div>
-      <el-table
-        class="table-content"
-        style="width: 100%"
-        size="mini"
-        :data="tableList"
-        border
-      >
-        <el-table-column
-          label="序号"
-          fixed="left"
-          width="50"
-          align="center"
-          color="black"
-        >
-          <template v-slot="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-for="col in colsList"
-          :key="col.prop"
-          :label="col.label"
-          :prop="col.prop"
-          align="center"
-          color="black"
-        >
-          <template v-slot="scope" v-if="col.type != undefined">
-            <div v-if="col.type === 'text'">
-              {{ scope.row[col.prop] }}
-            </div>
-            <div v-if="col.type === 'link'">
-              <el-button
-                type="text"
-                @click="navigate(scope.$index, col.prop)"
-                style="margin-right: 5px"
-                size="mini"
-                >{{ scope.row[col.prop] }}</el-button
-              >
-            </div>
-            <div v-if="col.type === 'opers'">
-              <div
-                v-for="c in col.opers"
-                :key="c"
-                style="display: inline-block"
-              >
-                <el-button
-                  type="primary"
-                  v-if="c.name == 'edit'"
-                  @click="editRow(scope.row.id)"
-                  style="margin-right: 5px"
-                  size="mini"
-                  >编辑</el-button
+  <div class="el-container" style="height: 100%; width: 100%">
+    <el-row style="height: 100%; width: 100%">
+      <el-col style="height: 100%; width: 100%" :span="4">
+        <Navi @title="getT"/>
+      </el-col>
+      <el-col style="height: 100%; width: 100%" :span="20">
+        <div>
+          <div class="app-container">
+            <div v-if="showTable == 1">
+              <div v-if="showQuery == 1" style="margin-vertical: 20px">
+                <div
+                    v-for="(item, index) in querList"
+                    :key="index"
+                    style="display: inline-block"
                 >
+                  <el-input
+                      v-if="item.type == 'input'"
+                      v-model="item.value"
+                      :placeholder="item.label"
+                      style="width: 100%"
+                  />
+                  <el-select
+                      v-if="item.type == 'select'"
+                      v-model="item.value"
+                      :placeholder="item.label"
+                      style="width: 80%"
+                  >
+                    <el-option
+                        v-for="items in item.option"
+                        :key="items.value"
+                        :label="items.label"
+                        :value="items.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+                <el-button size="mini" class="commButton" @click="queryTable()"
+                >查询
+                </el-button
+                >
+              </div>
+              <el-table
+                  class="table-content"
+                  style="width: 100%"
+                  height="600"
+                  size="mini"
+                  :data="tableList"
+                  border
+              >
+                <el-table-column
+                    label="序号"
+                    fixed="left"
+                    width="50"
+                    align="center"
+                    color="black"
+                >
+                  <template v-slot="scope">
+                    {{ scope.$index + 1 }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                    v-for="col in colsList"
+                    :key="col.prop"
+                    :label="col.label"
+                    :prop="col.prop"
+                    align="center"
+                    color="black"
+                >
+                  <template v-slot="scope" v-if="col.type != undefined">
+                    <div v-if="col.type === 'text'">
+                      {{ scope.row[col.prop] }}
+                    </div>
+                    <div v-if="col.type === 'link'">
+                      <el-button
+                          type="text"
+                          @click="navigate(scope.$index, col.prop)"
+                          style="margin-right: 5px"
+                          size="mini"
+                      >{{ scope.row[col.prop] }}
+                      </el-button
+                      >
+                    </div>
+                    <div v-if="col.type === 'opers'">
+                      <div
+                          v-for="c in col.opers"
+                          :key="c"
+                          style="display: inline-block"
+                      >
+                        <el-button
+                            type="primary"
+                            v-if="c.name == 'edit'"
+                            @click="editRow(scope.row.id)"
+                            style="margin-right: 5px"
+                            size="mini"
+                        >编辑
+                        </el-button
+                        >
 
-                <el-button
-                  type="success"
-                  v-else-if="c.name == 'detail'"
-                  @click="detailRow(scope.row.id)"
-                  style="margin-right: 5px"
-                  size="mini"
-                  >详情</el-button
-                >
-                <el-button
-                  type="danger"
-                  v-else-if="c.name == 'delete'"
-                  @click="deleteRow(scope.row.id)"
-                  style="margin-right: 5px"
-                  size="mini"
-                  >删除</el-button
-                >
-                <el-button
-                  type="primary"
-                  v-else
-                  @click="pushRow(scope.$index, c.name)"
-                  style="margin-right: 5px"
-                  size="mini"
-                  >{{ c.label }}</el-button
+                        <el-button
+                            type="primary"
+                            v-else-if="c.name == 'detail'"
+                            @click="detailRow(scope.row.id)"
+                            style="margin-right: 5px"
+                            size="mini"
+                        >详情
+                        </el-button
+                        >
+                        <el-button
+                            type="danger"
+                            v-else-if="c.name == 'delete'"
+                            @click="deleteRow(scope.row.id)"
+                            style="margin-right: 5px"
+                            size="mini"
+                        >删除
+                        </el-button
+                        >
+                        <el-button
+                            type="primary"
+                            v-else
+                            @click="pushRow(scope.$index, c.name)"
+                            style="margin-right: 5px"
+                            size="mini"
+                        >{{ c.label }}
+                        </el-button
+                        >
+                      </div>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+
+              <div
+                  style="margin: 0 auto; width: 800px"
+                  v-show="tableList.length > 0 && showPagination == 1"
+              >
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-sizes="[20, 30, 50, 100, 200]"
+                    :page-size="pageSize"
+                    :total="tableList.length"
+                    style="margin-top: 15px"
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                />
+              </div>
+
+              <div v-if="showAdd == 1" class="centerButton">
+                <el-button type="primary" :icon="Delete" circle/>
+                <el-button type="primary" @click="addItem()">添加</el-button>
+              </div>
+            </div>
+
+            <div v-if="showForm == 1">
+              <div class="table_center">
+                <table class="content">
+                  <tr>
+                    <td
+                        colspan="6"
+                        style="font-size: 24px; font-weight: bold; color: #304156"
+                    >
+                      {{ formName }}
+                    </td>
+                  </tr>
+                  <tr
+                      v-for="(item, index) in formList"
+                      :key="index"
+                      style="height: 40px"
+                  >
+                    <td colspan="1" width="200">{{ item.label }}</td>
+                    <td
+                        colspan="5"
+                        v-if="item.type == 'text'"
+                        style="font-size: 14px"
+                    >
+                      {{ item.value }}
+                    </td>
+                    <td colspan="5" v-if="item.type == 'input'">
+                      <el-input
+                          v-model="item.value"
+                          placeholder="请输入"
+                          style="width: 90%"
+                      />
+                    </td>
+                    <td colspan="5" v-if="item.type == 'select'">
+                      <el-select
+                          v-model="item.value"
+                          placeholder="请选择"
+                          style="width: 90%"
+                      >
+                        <el-option
+                            v-for="items in item.option"
+                            :key="items.value"
+                            :label="items.label"
+                            :value="items.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </td>
+                    <td colspan="5" v-if="item.type == 'date'">
+                      <el-date-picker
+                          style="width: 90%"
+                          v-model="item.value"
+                          type="date"
+                          format="YYYY/MM/DD"
+                          value-format="YYYY-MM-DD"
+                          placeholder="选择日期时间"
+                      >
+                      </el-date-picker>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div v-if="showSubmit == '1'" class="centerButton">
+                <el-button size="mini" class="rowButton" @click="doSumit()"
+                >提交
+                </el-button
                 >
               </div>
             </div>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div
-        style="margin: 0 auto; width: 800px"
-        v-show="tableList.length > 0 && showPagination == 1"
-      >
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-sizes="[20, 30, 50, 100, 200]"
-          :page-size="pageSize"
-          :total="tableList.length"
-          style="margin-top: 15px"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-        />
-      </div>
-
-      <div v-if="showAdd == 1" class="centerButton">
-        <el-button size="mini" class="rowButton" @click="addItem()"
-          >添加</el-button
-        >
-      </div>
-    </div>
-
-    <div v-if="showForm == 1">
-      <div class="table_center">
-        <table class="content">
-          <tr>
-            <td
-              colspan="6"
-              style="font-size: 24px; font-weight: bold; color: #304156"
-            >
-              {{ formName }}
-            </td>
-          </tr>
-          <tr
-            v-for="(item, index) in formList"
-            :key="index"
-            style="height: 40px"
-          >
-            <td colspan="1" width="200">{{ item.label }}</td>
-            <td colspan="5" v-if="item.type == 'text'" style="font-size: 14px">
-              {{ item.value }}
-            </td>
-            <td colspan="5" v-if="item.type == 'input'">
-              <el-input
-                v-model="item.value"
-                placeholder="请输入"
-                style="width: 90%"
-              />
-            </td>
-            <td colspan="5" v-if="item.type == 'select'">
-              <el-select
-                v-model="item.value"
-                placeholder="请选择"
-                style="width: 90%"
-              >
-                <el-option
-                  v-for="items in item.option"
-                  :key="items.value"
-                  :label="items.label"
-                  :value="items.value"
-                >
-                </el-option>
-              </el-select>
-            </td>
-            <td colspan="5" v-if="item.type == 'date'">
-              <el-date-picker
-                style="width: 90%"
-                v-model="item.value"
-                type="date"
-                format="YYYY/MM/DD"
-                value-format="YYYY-MM-DD"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div v-if="showSubmit == '1'" class="centerButton">
-        <el-button size="mini" class="rowButton" @click="doSumit()"
-          >提交</el-button
-        >
-      </div>
-    </div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
+
 <script>
 import Navi from "@/components/Navi";
 
-import { generalRequest } from "@/service/genServ.js";
-import { getUimsConfig } from "@/service/genServ.js";
+import {generalRequest} from "@/service/genServ.js";
+import {getUimsConfig} from "@/service/genServ.js";
+
 export default {
   name: "BaseTable",
   components: {
@@ -296,8 +319,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -367,8 +390,8 @@ export default {
                       _self.formList[i].value = _self.form[pro];
                       if (_self.formList[i].type == "select") {
                         if (
-                          _self.form[pro + "List"] != undefined &&
-                          _self.form[pro + "List"] != ""
+                            _self.form[pro + "List"] != undefined &&
+                            _self.form[pro + "List"] != ""
                         ) {
                           _self.formList[i].option = _self.form[pro + "List"];
                         }
@@ -458,8 +481,8 @@ export default {
                         _self.formList[i].value = _self.form[pro];
                         if (_self.formList[i].type == "select") {
                           if (
-                            _self.form[pro + "List"] != undefined &&
-                            _self.form[pro + "List"] != ""
+                              _self.form[pro + "List"] != undefined &&
+                              _self.form[pro + "List"] != ""
                           ) {
                             _self.formList[i].option = _self.form[pro + "List"];
                           }
@@ -544,8 +567,8 @@ export default {
                       _self.formList[i].value = _self.form[pro];
                       if (_self.formList[i].type == "select") {
                         if (
-                          _self.form[pro + "List"] != undefined &&
-                          _self.form[pro + "List"] != ""
+                            _self.form[pro + "List"] != undefined &&
+                            _self.form[pro + "List"] != ""
                         ) {
                           _self.formList[i].option = _self.form[pro + "List"];
                         }
@@ -563,7 +586,7 @@ export default {
       this.showForm = "1";
       this.showTable = "0";
       this.id = id;
-      var data = { id: id };
+      var data = {id: id};
       this.showSubmit = "1";
       var namePage = this.name + "Edit";
       let _self = this;
@@ -587,8 +610,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -604,7 +627,7 @@ export default {
     detailRow(id) {
       this.showForm = "1";
       this.showTable = "0";
-      var data = { id: id };
+      var data = {id: id};
       this.id = id;
       this.showSubmit = "0";
       var namePage = this.name + "Edit";
@@ -629,8 +652,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -650,7 +673,7 @@ export default {
           this.index = i;
         }
       }
-      var data = { id: id };
+      var data = {id: id};
       this.tableList.splice(this.index, 1);
       generalRequest(url, data).then((res) => {
         if (res.code == 0) {
@@ -679,7 +702,7 @@ export default {
     },
 
     doSumit() {
-      var data = { id: this.id };
+      var data = {id: this.id};
       for (var i = 0; i < this.formList.length; i++) {
         var obj = {};
         var key = this.formList[i].prop;
@@ -688,7 +711,7 @@ export default {
         Object.assign(data, obj);
       }
       var url = "/api/" + this.rootUrl + "/" + this.name + "Submit";
-      generalRequest(url, { form: data }).then((res) => {
+      generalRequest(url, {form: data}).then((res) => {
         if (res.code == 0) {
           this.id = res.data.data.id;
           this.$message({
@@ -730,8 +753,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -749,4 +772,11 @@ export default {
 </script>
 
 <style scoped>
+html {
+  height: 100%;
+}
+
+.rowButton {
+  color: #79bbff;
+}
 </style>

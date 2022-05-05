@@ -5,7 +5,7 @@ import { store } from './store/createStore'
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import "@/styles/index.scss";
-
+import * as icons from '@element-plus/icons'
 
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
@@ -20,6 +20,12 @@ router.beforeEach((to, from, next) => {
   next();
 })
 
-createApp(App)
+const app = createApp(App)
+Object.keys(icons).forEach(key => {
+  app.component(key, icons[key])
+})
+app
   .use(ElementPlus)
-  .use(store).use(router).mount('#app')
+  .use(store)
+  .use(router)
+  .mount('#app')

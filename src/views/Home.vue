@@ -8,17 +8,18 @@
           <div style="font-size: 24px;color: white;letter-spacing: 6px;font-family: 'PingFang SC',serif">学生管理系统</div>
         </el-header>
         <el-main>
+          <div class="home">
+            <el-card class="box-card">
+              <div class="card-header">
+                <span>项目简介</span>
+                <el-button class="button" type="text" >Operation button</el-button>
+              </div>
+              <div v-for="o in 4" :key="o" class="text item"  style="font-size: 14px">{{ 'List item ' + o }}</div>
+            </el-card>
+          </div>
           <div
-              class="home"
-              style="
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-          "
-          >
-            <el-button size="large" class="deleteButton" type="primary" @click="logout">退出登录</el-button>
+              class="home">
+            <el-button size="large" class="button" type="primary" @click="logout">退出登录</el-button>
           </div>
         </el-main>
       </el-container>
@@ -55,4 +56,28 @@ html {
   width: 100%;
 }
 
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.box-card {
+  width: 720px;
+  height: 960px;
+}
+
+.home {
+  margin-top: 50px;
+  justify-content: center;
+  display: flex;
+}
+
+.button {
+height: 24px;
+}
 </style>

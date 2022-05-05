@@ -1,45 +1,97 @@
-import 
 <template>
-  <Navi />
-  <div class="aboutus">
-    <div class="title">
-      <el-divider content-position="center">个人简介</el-divider>
-      <p>
-        <el-tag>{{ myName }}</el-tag>
-      </p>
-    </div>
-    <el-card class="box-card" style="margin-bottom: 20px">
-      <div class="text item">
-        <div>
-          {{ overview }}
+  <el-container class="el-container" style="height: 100%; width: 100%">
+    <el-aside width="200px">
+      <Navi />
+    </el-aside>
+    <el-container>
+      <el-header
+        style="
+          height: 60px;
+          background-color: #409eff;
+          padding: 15px;
+          text-align: center;
+          border-radius: 2px;
+        "
+      >
+        <div
+          style="
+            font-size: 24px;
+            color: white;
+            letter-spacing: 6px;
+            font-family: 'PingFang SC', serif;
+          "
+        >
+          学生管理系统
         </div>
-        <div class="img">
-          <img :src="img_url" />
-        </div>
-        <div>
-          <el-row :gutter="110" v-for="(item, i) in attachList" :key="i">
-            <el-col :span="88">
-              <span class="large">{{ item.title }}</span>
-              <div class="grid-content bg-purple">
-                <p v-html="item.content"></p>
+      </el-header>
+      <el-main>
+        <div class="aboutus">
+          <el-card class="box-card">
+            <div class="card-header">基本信息</div>
+            <div
+              class="item"
+              style="
+                display: flex;
+                flex-direction: row;
+                align-content: center;
+                align-items: center;
+              "
+            >
+              <div class="item header-img" style="width: 180px">
+                <el-image
+                  src="https://gravatar.loli.net/avatar/c14402ce10441a645a6151118eef7609?d=retro&v=1.4.18"
+                  fit="fill"
+                />
               </div>
-            </el-col>
-          </el-row>
+              <div
+                class="item"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-content: center;
+                  align-items: start;
+                "
+              >
+                <div>姓名： {{ myName }}</div>
+                <div>简介： {{ overview }}</div>
+              </div>
+            </div>
+          </el-card>
+
+          <el-card class="box-card">
+            <div
+              class="item"
+              style="
+                display: flex;
+                flex-direction: column;
+                align-content: start;
+                align-items: start;
+              "
+            >
+              <el-row
+                type="flex"
+                style="margin-left: 12px; margin-right: 12px;width:100%"
+                :gutter="110"
+                v-for="(item, i) in attachList"
+                :key="i"
+              >
+                <p>{{ item.title }}</p>
+                <p v-html="item.content"></p>
+              </el-row>
+            </div>
+          </el-card>
+          <el-button style="margin-top:12px" size="primary" @click="downPDF()">下载简历 </el-button>
         </div>
-      </div>
-      <div class="topMask square"></div>
-      <div class="topMask circular"></div>
-    </el-card>
-    <el-button size="primary" class="deleteButton" @click="downPDF()"
-      >下载</el-button
-    >
-  </div>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script>
 import Navi from "@/components/Navi";
 import { getStudentIntroduceData } from "@/service/genServ.js";
 import { downloadPost } from "@/service/genServ.js";
+
 export default {
   name: "Home",
   components: {
@@ -74,72 +126,38 @@ export default {
 };
 </script>
 <style scoped>
-.img {
-  padding: auto;
-  height: 100px;
+html {
+  height: 100%;
+  width: 100%;
 }
+
 .aboutus {
-  font-size: 14px;
-  text-align: left;
-  padding: 0px 100px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
 }
-.intro {
-  width: 200px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-.text {
-  font-size: 14px;
-  text-align: left;
-  line-height: 30px;
-  text-indent: 2em;
-}
-.box-card {
-  position: relative;
-}
-.item {
-  display: inline-block;
-  margin: 30px 50px;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-.clearfix span {
-  color: #fff;
-  font-weight: bold;
-}
-.title p {
-  color: #8c8888;
-  font-size: 15px;
-  margin-bottom: 80px;
-  text-align: center;
-}
-.large {
-  margin-right: 50px;
+
+.card-header {
   font-size: 16px;
-  color: #409eff;
   font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.topMask {
-  width: 100px;
-  height: 100px;
-  background-color: rgba(68, 138, 255, 0.2);
-  transform: rotate(45deg);
-  position: absolute;
+
+.item {
+  font-size: 14px;
+  margin-bottom: 18px;
 }
-.square {
-  border-radius: 5px;
-  top: 0px;
+
+.box-card {
+  margin-top: 12px;
+  padding: 8px;
+  width: 720px;
 }
-.circular {
-  border-radius: 50%;
-  top: 80px;
-  left: 80%;
-  background-color: rgba(255, 208, 75, 0.2);
+
+.header-img {
+  padding: 8px;
 }
 </style>

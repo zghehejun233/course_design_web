@@ -26,8 +26,8 @@
       </el-header>
       <el-main>
         <div v-if="showTable == 1">
-          <el-card
-            ><div class="card-header">模块摘要</div>
+          <el-card>
+            <div class="card-header">模块摘要</div>
             <div
               style="
                 padding: 14px;
@@ -101,10 +101,12 @@
                     align-items: center;
                   "
                   @click="addItem()"
-                  ><CirclePlus
-                    style="width: 12px; height: 12px; margin-right: 8px"
-                  />添加</el-button
                 >
+                  <CirclePlus
+                    style="width: 12px; height: 12px; margin-right: 8px"
+                  />
+                  添加
+                </el-button>
                 <el-button
                   type="primary"
                   size="small"
@@ -117,10 +119,10 @@
                     align-items: center;
                   "
                   @click="addItem()"
-                  ><coin
-                    style="width: 12px; height: 12px; margin-right: 8px"
-                  />批量添加</el-button
                 >
+                  <coin style="width: 12px; height: 12px; margin-right: 8px" />
+                  批量添加
+                </el-button>
               </div>
             </div>
             <el-table
@@ -128,6 +130,7 @@
               style="width: 100%"
               height="600"
               size="mini"
+              v-loading="loading"
               :data="tableList"
               border
               stripe
@@ -170,53 +173,76 @@
                       :key="c"
                       style="display: inline-block"
                     >
-                      <el-button
-                        type="warning"
-                        size="small"
+                      <el-tooltip
                         v-if="c.name == 'edit'"
-                        @click="editRow(scope.row.id)"
-                        circle
-                        ><edit
-                          style="
-                            width: 12px;
-                            height: 12px;
-                            margin-right: 2px;
-                            margin-left: 2px;
-                          "
-                        />
-                      </el-button>
-
-                      <el-button
-                        type="success"
-                        size="small"
+                        class="box-item"
+                        effect="light"
+                        content="编辑"
+                        placement="bottom-end"
+                      >
+                        <el-button
+                          type="warning"
+                          size="small"
+                          @click="editRow(scope.row.id)"
+                          circle
+                        >
+                          <edit
+                            style="
+                              width: 12px;
+                              height: 12px;
+                              margin-right: 2px;
+                              margin-left: 2px;
+                            "
+                          />
+                        </el-button>
+                      </el-tooltip>
+                      <el-tooltip
                         v-else-if="c.name == 'detail'"
-                        @click="detailRow(scope.row.id)"
-                        circle
-                        ><files
-                          style="
-                            width: 12px;
-                            height: 12px;
-                            margin-right: 2px;
-                            margin-left: 2px;
-                          "
-                        />
-                      </el-button>
-                      <el-button
-                        type="danger"
-                        size="small"
+                        class="box-item"
+                        effect="light"
+                        content="详情"
+                        placement="bottom-end"
+                      >
+                        <el-button
+                          type="success"
+                          size="small"
+                          @click="detailRow(scope.row.id)"
+                          circle
+                        >
+                          <files
+                            style="
+                              width: 12px;
+                              height: 12px;
+                              margin-right: 2px;
+                              margin-left: 2px;
+                            "
+                          />
+                        </el-button>
+                      </el-tooltip>
+                      <el-tooltip
                         v-else-if="c.name == 'delete'"
-                        @click="detailRow(scope.row.id)"
-                        style="margin: 2px"
-                        circle
-                        ><delete
-                          style="
-                            width: 12px;
-                            height: 12px;
-                            margin-right: 2px;
-                            margin-left: 2px;
-                          "
-                        />
-                      </el-button>
+                        class="box-item"
+                        effect="light"
+                        content="删除"
+                        placement="bottom-end"
+                      >
+                        <el-button
+                          type="danger"
+                          size="small"
+                          @click="detailRow(scope.row.id)"
+                          style="margin: 2px"
+                          circle
+                        >
+                          <delete
+                            style="
+                              width: 12px;
+                              height: 12px;
+                              margin-right: 2px;
+                              margin-left: 2px;
+                            "
+                          />
+                        </el-button>
+                      </el-tooltip>
                       <el-button
                         type="primary"
                         v-else
@@ -230,39 +256,33 @@
                 </template>
               </el-table-column>
             </el-table>
+            <div
+              style="margin: 0 auto; width: 800px"
+              v-show="tableList.length > 0 && showPagination == 1"
+            >
+              <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-sizes="[20, 30, 50, 100, 200]"
+                :page-size="pageSize"
+                :total="tableList.length"
+                style="margin-top: 15px"
+                background
+                layout="total, sizes, prev, pager, next, jumper"
+              />
+            </div>
           </el-card>
           <el-card style="margin-top: 12px">
-            Powered By Vue.js and Element-plus UI kit</el-card
-          >
-
-          <div
-            style="margin: 0 auto; width: 800px"
-            v-show="tableList.length > 0 && showPagination == 1"
-          >
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :page-sizes="[20, 30, 50, 100, 200]"
-              :page-size="pageSize"
-              :total="tableList.length"
-              style="margin-top: 15px"
-              background
-              layout="total, sizes, prev, pager, next, jumper"
-            />
-          </div>
+            Powered By Vue.js and Element-plus UI kit
+          </el-card>
         </div>
 
-        <div v-if="showForm == 1">
+        <div v-if="showForm == 1" style="width:100%">
+          <el-page-header title="返回" :content="formName" @back="goBack" />
+        
           <div class="table_center">
+          <el-card style="wdith:960px;margin-top:24px">
             <table class="content">
-              <tr>
-                <td
-                  colspan="6"
-                  style="font-size: 24px; font-weight: bold; color: #304156"
-                >
-                  {{ formName }}
-                </td>
-              </tr>
               <tr
                 v-for="(item, index) in formList"
                 :key="index"
@@ -272,9 +292,9 @@
                 <td
                   colspan="5"
                   v-if="item.type == 'text'"
+                  :v-html=item.value
                   style="font-size: 14px"
                 >
-                  {{ item.value }}
                 </td>
                 <td colspan="5" v-if="item.type == 'input'">
                   <el-input
@@ -311,9 +331,10 @@
                 </td>
               </tr>
             </table>
+            </el-card>
           </div>
           <div v-if="showSubmit == '1'" class="centerButton">
-            <el-button size="mini" class="rowButton" @click="doSumit()"
+            <el-button type="primary" size="large" @click="doSumit()"
               >提交
             </el-button>
           </div>
@@ -345,6 +366,7 @@ export default {
       pageSize: 20,
       showQuery: "",
       showAdd: "",
+      loading: "",
       tableList: [],
       colsList: [],
       querList: [],
@@ -362,6 +384,7 @@ export default {
   created() {
     var title = this.$store.state.routerName;
     let _self = this;
+    _self.loading = true;
     getUimsConfig().then((res) => {
       var jsonObj = res.data.data;
       if (jsonObj.uims.rootUrl !== undefined && jsonObj.uims.rootUrl !== "") {
@@ -374,11 +397,14 @@ export default {
       for (var i = 0; i < _self.page.length; i++) {
         if (title === _self.page[i].title) {
           if (_self.page[i].type == "table") {
+            // 判断遍历到的page是否为table
+            // 若是，则初始化值
             _self.showTable = "1";
             _self.showForm = "0";
             _self.name = _self.page[i].name;
             _self.colsList = _self.page[i].item;
 
+            // 判断是否定义了查询
             if (_self.page[i].query != undefined) {
               if (Array.isArray(_self.page[i].query)) {
                 _self.querList = _self.page[i].query;
@@ -387,20 +413,22 @@ export default {
                 arr.push(_self.page[i].query);
                 _self.querList = arr;
               }
-
               _self.showQuery = "1";
             } else {
               _self.showQuery = "";
             }
 
             _self.showAdd = _self.page[i].showAdd;
+            // 判断是否支持翻页
             _self.showPagination = _self.page[i].showPagination;
             var url = "/api/" + _self.rootUrl + "/" + _self.name + "Init";
             generalRequest(url, data).then((res) => {
               _self.tableList = res.data.data;
+              _self.loading = false;
             });
           }
 
+          // 判断是否为form
           if (_self.page[i].type == "form") {
             _self.showForm = "1";
             _self.showTable = "0";
@@ -411,16 +439,16 @@ export default {
             var urlF = "/api/" + _self.rootUrl + "/" + _self.name + "Init";
             generalRequest(urlF, data).then((res) => {
               _self.form = res.data.data;
-              for (var pro in _self.form) {
+              for (var prop in _self.form) {
                 for (var i = 0; i < _self.formList.length; i++) {
-                  if (pro == _self.formList[i].prop) {
-                    _self.formList[i].value = _self.form[pro];
+                  if (prop == _self.formList[i].prop) {
+                    _self.formList[i].value = _self.form[prop];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                        _self.form[prop + "List"] != undefined &&
+                        _self.form[prop + "List"] != ""
                       ) {
-                        _self.formList[i].option = _self.form[pro + "List"];
+                        _self.formList[i].option = _self.form[prop + "List"];
                       }
                     }
                   }
@@ -460,7 +488,6 @@ export default {
                   arr.push(_self.page[i].query);
                   _self.querList = arr;
                 }
-
                 _self.showQuery = "1";
               } else {
                 _self.showQuery = "";
@@ -503,6 +530,7 @@ export default {
         }
       });
     },
+    // 链接跳转
     navigate(index, prop) {
       var query = this.tableList[index][prop + "Paras"];
       var vars = query.split("&");
@@ -517,7 +545,6 @@ export default {
           var value = pair[1];
           var obj = {};
           obj[key] = value;
-
           Object.assign(this.objectPush, obj);
         }
       }
@@ -648,6 +675,7 @@ export default {
                 _self.tableList = res.data.data;
               });
             }
+
             if (_self.page[i].type == "form") {
               _self.showForm = "1";
               _self.showTable = "0";
@@ -821,9 +849,9 @@ export default {
         }
       });
     },
-
     addItem() {
       this.id = "";
+      // 反转Form和Table的key，并未发生路由跳转
       this.showForm = "1";
       this.showTable = "0";
       var data = {};
@@ -864,6 +892,12 @@ export default {
           }
         }
       });
+    },
+    goBack() {
+      var _self = this;
+      _self.showForm = 0;
+      _self.showTable = 1;
+      console.log("go back");
     },
   },
 };

@@ -12,11 +12,13 @@
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
     "axios": "^0.21.1",
+    "chart.js": "^3.7.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.55",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",
     "vue": "^3.1.5",
+    "vue-chartjs": "^4.0.7",
     "vue-particles": "^1.0.9",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2",

@@ -1,11 +1,11 @@
 <template>
   <el-container class="el-container" style="height: 100%; width: 100%">
     <el-aside width="200px">
-      <Navi />
+      <Navi/>
     </el-aside>
     <el-container>
       <el-header
-        style="
+          style="
           height: 60px;
           background-color: #409eff;
           padding: 15px;
@@ -14,7 +14,7 @@
         "
       >
         <div
-          style="
+            style="
             font-size: 24px;
             color: white;
             letter-spacing: 6px;
@@ -29,8 +29,8 @@
           <el-card class="box-card">
             <div class="card-header">基本信息</div>
             <div
-              class="item"
-              style="
+                class="item"
+                style="
                 display: flex;
                 flex-direction: row;
                 align-content: center;
@@ -39,13 +39,13 @@
             >
               <div class="item header-img" style="width: 180px">
                 <el-image
-                  src="https://gravatar.loli.net/avatar/c14402ce10441a645a6151118eef7609?d=retro&v=1.4.18"
-                  fit="fill"
+                    src="https://gravatar.loli.net/avatar/c14402ce10441a645a6151118eef7609?d=retro&v=1.4.18"
+                    fit="fill"
                 />
               </div>
               <div
-                class="item"
-                style="
+                  class="item"
+                  style="
                   display: flex;
                   flex-direction: column;
                   align-content: center;
@@ -60,8 +60,8 @@
 
           <el-card class="box-card">
             <div
-              class="item"
-              style="
+                class="item"
+                style="
                 display: flex;
                 flex-direction: column;
                 align-content: start;
@@ -69,18 +69,40 @@
               "
             >
               <el-row
-                type="flex"
-                style="margin-left: 12px; margin-right: 12px;width:100%"
-                :gutter="110"
-                v-for="(item, i) in attachList"
-                :key="i"
+                  type="flex"
+                  style="margin-left: 12px; margin-right: 12px; width: 100%"
+                  :gutter="110"
+                  v-for="(item, i) in attachList"
+                  :key="i"
               >
                 <p>{{ item.title }}</p>
                 <p v-html="item.content"></p>
               </el-row>
             </div>
           </el-card>
-          <el-button style="margin-top:12px" size="primary" @click="downPDF()">下载简历 </el-button>
+          <el-card class="box-card">
+            <div
+                style="
+              display: flex;
+              flex-direction: column;
+              align-content: center;
+              align-items: center;
+            "
+            >
+              <div class="card-header">{{myName}}的综合素质分布</div>
+              <Radar
+                  :chart-options="chartOptions"
+                  :chart-data="chartData"
+                  :chart-id="chartId"
+                  :dataset-id-key="datasetIdKey"
+                  style="width: 400px"
+              />
+            </div>
+          </el-card>
+          <el-button style="margin-top: 12px" size="primary" @click="downPDF()"
+          >下载简历
+          </el-button
+          >
         </div>
       </el-main>
     </el-container>
@@ -89,17 +111,55 @@
 
 <script>
 import Navi from "@/components/Navi";
-import { getStudentIntroduceData } from "@/service/genServ.js";
-import { downloadPost } from "@/service/genServ.js";
+import {getStudentIntroduceData} from "@/service/genServ.js";
+import {downloadPost} from "@/service/genServ.js";
+import {Radar} from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  RadialLinearScale,
+  LineElement,
+} from "chart.js";
+
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    PointElement,
+    RadialLinearScale,
+    LineElement,
+);
 
 export default {
   name: "Home",
   components: {
     Navi,
+    Radar,
+  },
+  props: {
+    chartId: {
+      type: String,
+      default: "radar-chart",
+    },
+    datasetIdKey: {
+      type: String,
+      default: "label",
+    },
+    height: {
+      type: Number,
+      default: 400,
+    },
+    width: {
+      type: Number,
+      default: 400
+    },
   },
   created() {
     this.objectPush = this.$route.query;
-    getStudentIntroduceData({ ...this.objectPush }).then((res) => {
+    getStudentIntroduceData({...this.objectPush}).then((res) => {
       this.myName = res.data.data.myName;
       this.overview = res.data.data.overview;
       this.img_url = res.data.data.img_url;
@@ -108,6 +168,18 @@ export default {
   },
   data() {
     return {
+      chartData: {
+        labels: ["Running", "Swimming", "Eating", "Cycling"],
+        datasets: [
+          {
+            data: [20, 10, 4, 2],
+          },
+        ],
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: true
+      },
       objectPush: "",
       myName: "",
       overview: "",
@@ -117,9 +189,9 @@ export default {
   methods: {
     downPDF() {
       downloadPost(
-        "http:/localhost:9090/api/teach/getStudentIntroducePdf",
-        "个人简历",
-        { ...this.objectPush }
+          "http:/localhost:9090/api/teach/getStudentIntroducePdf",
+          "个人简历",
+          {...this.objectPush}
       );
     },
   },

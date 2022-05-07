@@ -1,61 +1,52 @@
 <template>
-  <div class="login-container"
-       style="width: 100%;display:flex;flex-direction: column;align-content: center;align-items: center">
-    <div class="title">
-      学生信息管理系统
-    </div>
-    <el-card style="width:320px;height: 360px">
+  <div class="login-container">
+    <div class="title">学生信息管理系统</div>
+    <el-card style="width: 320px; height: 360px">
       <el-form class="login-form" autocomplete="on" label-position="left">
         <el-input
-            class="input"
-            ref="username"
-            v-model="username"
-            placeholder="请输入账号"
-            name="username"
-            type="text"
-            tabindex="1"
-            autocomplete="on"
-            size="large"
+          class="input"
+          ref="username"
+          v-model="username"
+          placeholder="请输入账号"
+          name="username"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+          size="large"
         >
           <template #prefix>
             <el-icon class="el-input__icon">
-              <user/>
+              <user />
             </el-icon>
           </template>
         </el-input>
         <el-input
-            class="input"
-            v-model="password"
-            type="password"
-            placeholder="Password"
-            name="password"
-            size="large"
+          class="input"
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          name="password"
+          size="large"
         >
           <template #prefix>
             <el-icon class="el-input__icon">
-              <key/>
+              <key />
             </el-icon>
           </template>
         </el-input>
       </el-form>
 
-      <el-button
-          size="large"
-          type="primary"
-          @click="handleSubmit"
-      >登录
+      <el-button size="large" type="primary" @click="handleSubmit"
+        >登录
       </el-button>
-
     </el-card>
   </div>
-<canvas></canvas>
-
+    <div id="app">
+      <vue-particles color="#dedede"></vue-particles>
+    </div>
 </template>
 
 <script>
-
-
-
 export default {
   name: "Login",
   data() {
@@ -69,19 +60,19 @@ export default {
   },
   methods: {
     handleSubmit() {
-      const {username, password} = this;
+      const { username, password } = this;
       if (username && password) {
         this.$store
-            .dispatch("login", {
-              username: username,
-              password: password,
-            })
-            .catch(() => {
-              this.$message({
-                message: " 用户名或密码错误",
-                type: "warnning",
-              });
+          .dispatch("login", {
+            username: username,
+            password: password,
+          })
+          .catch(() => {
+            this.$message({
+              message: " 用户名或密码错误",
+              type: "warnning",
             });
+          });
       }
     },
   },
@@ -89,7 +80,15 @@ export default {
 </script>
 
 <style>
-
+.login-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  background-color: #f4f9fe;
+}
 .title {
   margin-top: 92px;
   margin-bottom: 52px;

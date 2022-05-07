@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import VueParticles from 'vue-particles'
 import { store } from './store/createStore'
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
@@ -28,4 +29,5 @@ app
   .use(ElementPlus)
   .use(store)
   .use(router)
+  .use(VueParticles)
   .mount('#app')

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 function userLoginReq(username, password) {
-    return axios.post('http://47.100.74.245/api/auth/login',
+    return axios.post('http://localhost:9090/api/auth/login',
     // return axios.post('/api/auth/login',
         {
             username: username,

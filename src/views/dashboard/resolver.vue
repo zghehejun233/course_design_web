@@ -1,11 +1,11 @@
 <template>
   <el-container class="el-container" style="height: 100%; width: 100%">
     <el-aside width="200px">
-      <Navi @title="getT" />
+      <Navi @title="getT"/>
     </el-aside>
     <el-container>
       <el-header
-        style="
+          style="
           height: 60px;
           background-color: #409eff;
           padding: 15px;
@@ -14,7 +14,7 @@
         "
       >
         <div
-          style="
+            style="
             font-size: 24px;
             color: white;
             letter-spacing: 6px;
@@ -26,62 +26,71 @@
       </el-header>
       <el-main>
         <div v-if="showTable == 1">
-          <el-card>
-            <div class="card-header">模块摘要</div>
-            <div
-              style="
+          <div v-if="showDescription == 1">
+            <el-card>
+              <div class="card-header">模块摘要</div>
+              <div
+                  v-for="(item,index) in descriptionList"
+                  :key="index">
+                <div
+                    style="
                 padding: 14px;
                 font-size: 16px;
+                font-weight: bold;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
               "
-            >
-              模块功能
-            </div>
-            <div
-              style="
+                >
+                  {{ item.title }}
+                </div>
+                <div
+                    v-for="(m_item,m_index) in item.content"
+                    :key="m_index"
+                    style="
                 padding-left: 16px;
                 font-size: 14px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
               "
-            >
-              一些简单的介绍
-            </div>
-          </el-card>
+                >
+                  {{ m_item }}
+                </div>
+              </div>
+            </el-card>
+          </div>
           <div v-if="showQuery == 1" class="query-block">
             <el-card class="search-card">
               <div id="search-text">检索</div>
               <div
-                v-for="(item, index) in querList"
-                :key="index"
-                style="display: inline-block"
+                  v-for="(item, index) in queryList"
+                  :key="index"
+                  style="display: inline-block"
               >
                 <el-input
-                  v-if="item.type == 'input'"
-                  v-model="item.value"
-                  :placeholder="item.label"
-                  style="width: 100%"
+                    v-if="item.type == 'input'"
+                    v-model="item.value"
+                    :placeholder="item.label"
+                    style="width: 100%"
                 />
                 <el-select
-                  v-if="item.type == 'select'"
-                  v-model="item.value"
-                  :placeholder="item.label"
-                  style="width: 80%"
+                    v-if="item.type == 'select'"
+                    v-model="item.value"
+                    :placeholder="item.label"
+                    style="width: 80%"
                 >
                   <el-option
-                    v-for="items in item.option"
-                    :key="items.value"
-                    :label="items.label"
-                    :value="items.value"
+                      v-for="items in item.option"
+                      :key="items.value"
+                      :label="items.label"
+                      :value="items.value"
                   >
                   </el-option>
                 </el-select>
               </div>
               <el-button type="primary" size="small" plain @click="queryTable()"
-                >查询
+              >查询
               </el-button>
             </el-card>
           </div>
@@ -90,69 +99,69 @@
               <div class="action-bar">
                 <span style="margin-right: 24px">操作</span>
                 <el-button
-                  type="primary"
-                  size="small"
-                  plain
-                  round
-                  style="
+                    type="primary"
+                    size="small"
+                    plain
+                    round
+                    style="
                     font-size: 14px;
                     display: flex-inline;
                     flex-direction: row;
                     align-items: center;
                   "
-                  @click="addItem()"
+                    @click="addItem()"
                 >
                   <CirclePlus
-                    style="width: 12px; height: 12px; margin-right: 8px"
+                      style="width: 12px; height: 12px; margin-right: 8px"
                   />
                   添加
                 </el-button>
                 <el-button
-                  type="primary"
-                  size="small"
-                  plain
-                  round
-                  style="
+                    type="primary"
+                    size="small"
+                    plain
+                    round
+                    style="
                     font-size: 14px;
                     display: flex-inline;
                     flex-direction: row;
                     align-items: center;
                   "
-                  @click="addItem()"
+                    @click="addItem()"
                 >
-                  <coin style="width: 12px; height: 12px; margin-right: 8px" />
+                  <coin style="width: 12px; height: 12px; margin-right: 8px"/>
                   批量添加
                 </el-button>
               </div>
             </div>
             <el-table
-              class="table-content"
-              style="width: 100%"
-              height="600"
-              size="mini"
-              v-loading="loading"
-              :data="tableList"
-              border
-              stripe
+                class="table-content"
+                style="width: 100%"
+                height="600"
+                size="mini"
+                v-loading="loading"
+                :data="tableList"
+                border
+                stripe
             >
               <el-table-column
-                label="序号"
-                fixed="left"
-                width="50"
-                align="center"
-                color="black"
+                  label="序号"
+                  fixed="left"
+                  width="50"
+                  align="center"
+                  color="black"
               >
                 <template v-slot="scope">
                   {{ scope.$index + 1 }}
                 </template>
               </el-table-column>
               <el-table-column
-                v-for="col in colsList"
-                :key="col.prop"
-                :label="col.label"
-                :prop="col.prop"
-                align="center"
-                color="black"
+                  v-for="col in colsList"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  align="center"
+                  color="black"
               >
                 <template v-slot="scope" v-if="col.type != undefined">
                   <div v-if="col.type === 'text'">
@@ -160,34 +169,34 @@
                   </div>
                   <div v-if="col.type === 'link'">
                     <el-button
-                      type="text"
-                      @click="navigate(scope.$index, col.prop)"
-                      style="margin-right: 5px"
-                      size="mini"
-                      >{{ scope.row[col.prop] }}
+                        type="text"
+                        @click="navigate(scope.$index, col.prop)"
+                        style="margin-right: 5px"
+                        size="mini"
+                    >{{ scope.row[col.prop] }}
                     </el-button>
                   </div>
                   <div v-if="col.type === 'opers'">
                     <div
-                      v-for="c in col.opers"
-                      :key="c"
-                      style="display: inline-block"
+                        v-for="c in col.opers"
+                        :key="c"
+                        style="display: inline-block"
                     >
                       <el-tooltip
-                        v-if="c.name == 'edit'"
-                        class="box-item"
-                        effect="light"
-                        content="编辑"
-                        placement="bottom-end"
+                          v-if="c.name == 'edit'"
+                          class="box-item"
+                          effect="light"
+                          content="编辑"
+                          placement="bottom-end"
                       >
                         <el-button
-                          type="warning"
-                          size="small"
-                          @click="editRow(scope.row.id)"
-                          circle
+                            type="warning"
+                            size="small"
+                            @click="editRow(scope.row.id)"
+                            circle
                         >
                           <edit
-                            style="
+                              style="
                               width: 12px;
                               height: 12px;
                               margin-right: 2px;
@@ -197,20 +206,20 @@
                         </el-button>
                       </el-tooltip>
                       <el-tooltip
-                        v-else-if="c.name == 'detail'"
-                        class="box-item"
-                        effect="light"
-                        content="详情"
-                        placement="bottom-end"
+                          v-else-if="c.name == 'detail'"
+                          class="box-item"
+                          effect="light"
+                          content="详情"
+                          placement="bottom-end"
                       >
                         <el-button
-                          type="success"
-                          size="small"
-                          @click="detailRow(scope.row.id)"
-                          circle
+                            type="success"
+                            size="small"
+                            @click="detailRow(scope.row.id)"
+                            circle
                         >
                           <files
-                            style="
+                              style="
                               width: 12px;
                               height: 12px;
                               margin-right: 2px;
@@ -220,21 +229,21 @@
                         </el-button>
                       </el-tooltip>
                       <el-tooltip
-                        v-else-if="c.name == 'delete'"
-                        class="box-item"
-                        effect="light"
-                        content="删除"
-                        placement="bottom-end"
+                          v-else-if="c.name == 'delete'"
+                          class="box-item"
+                          effect="light"
+                          content="删除"
+                          placement="bottom-end"
                       >
                         <el-button
-                          type="danger"
-                          size="small"
-                          @click="detailRow(scope.row.id)"
-                          style="margin: 2px"
-                          circle
+                            type="danger"
+                            size="small"
+                            @click="detailRow(scope.row.id)"
+                            style="margin: 2px"
+                            circle
                         >
                           <delete
-                            style="
+                              style="
                               width: 12px;
                               height: 12px;
                               margin-right: 2px;
@@ -244,12 +253,12 @@
                         </el-button>
                       </el-tooltip>
                       <el-button
-                        type="primary"
-                        v-else
-                        @click="pushRow(scope.$index, c.name)"
-                        style="margin-right: 5px"
-                        size="mini"
-                        >{{ c.label }}
+                          type="primary"
+                          v-else
+                          @click="pushRow(scope.$index, c.name)"
+                          style="margin-right: 5px"
+                          size="mini"
+                      >{{ c.label }}
                       </el-button>
                     </div>
                   </div>
@@ -257,18 +266,18 @@
               </el-table-column>
             </el-table>
             <div
-              style="margin: 0 auto; width: 800px"
-              v-show="tableList.length > 0 && showPagination == 1"
+                style="margin: 0 auto; width: 800px"
+                v-show="tableList.length > 0 && showPagination == 1"
             >
               <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :page-sizes="[20, 30, 50, 100, 200]"
-                :page-size="pageSize"
-                :total="tableList.length"
-                style="margin-top: 15px"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :page-sizes="[20, 30, 50, 100, 200]"
+                  :page-size="pageSize"
+                  :total="tableList.length"
+                  style="margin-top: 15px"
+                  background
+                  layout="total, sizes, prev, pager, next, jumper"
               />
             </div>
           </el-card>
@@ -278,64 +287,64 @@
         </div>
 
         <div v-if="showForm == 1" style="width:100%">
-          <el-page-header title="返回" :content="formName" @back="goBack" />
-        
+          <el-page-header title="返回" :content="formName" @back="goBack"/>
+
           <div class="table_center">
-          <el-card style="wdith:960px;margin-top:24px">
-            <table class="content">
-              <tr
-                v-for="(item, index) in formList"
-                :key="index"
-                style="height: 40px"
-              >
-                <td colspan="1" width="200">{{ item.label }}</td>
-                <td
-                  colspan="5"
-                  v-if="item.type == 'text'"
-                  :v-html=item.value
-                  style="font-size: 14px"
+            <el-card style="wdith:960px;margin-top:24px">
+              <table class="content">
+                <tr
+                    v-for="(item, index) in formList"
+                    :key="index"
+                    style="height: 40px"
                 >
-                </td>
-                <td colspan="5" v-if="item.type == 'input'">
-                  <el-input
-                    v-model="item.value"
-                    placeholder="请输入"
-                    style="width: 90%"
-                  />
-                </td>
-                <td colspan="5" v-if="item.type == 'select'">
-                  <el-select
-                    v-model="item.value"
-                    placeholder="请选择"
-                    style="width: 90%"
+                  <td colspan="1" width="200">{{ item.label }}</td>
+                  <td
+                      colspan="5"
+                      v-if="item.type == 'text'"
+                      :v-html=item.value
+                      style="font-size: 14px"
                   >
-                    <el-option
-                      v-for="items in item.option"
-                      :key="items.value"
-                      :label="items.label"
-                      :value="items.value"
+                  </td>
+                  <td colspan="5" v-if="item.type == 'input'">
+                    <el-input
+                        v-model="item.value"
+                        placeholder="请输入"
+                        style="width: 90%"
+                    />
+                  </td>
+                  <td colspan="5" v-if="item.type == 'select'">
+                    <el-select
+                        v-model="item.value"
+                        placeholder="请选择"
+                        style="width: 90%"
                     >
-                    </el-option>
-                  </el-select>
-                </td>
-                <td colspan="5" v-if="item.type == 'date'">
-                  <el-date-picker
-                    style="width: 90%"
-                    v-model="item.value"
-                    type="date"
-                    format="YYYY/MM/DD"
-                    value-format="YYYY-MM-DD"
-                    placeholder="选择日期时间"
-                  >
-                  </el-date-picker>
-                </td>
-              </tr>
-            </table>
+                      <el-option
+                          v-for="items in item.option"
+                          :key="items.value"
+                          :label="items.label"
+                          :value="items.value"
+                      >
+                      </el-option>
+                    </el-select>
+                  </td>
+                  <td colspan="5" v-if="item.type == 'date'">
+                    <el-date-picker
+                        style="width: 90%"
+                        v-model="item.value"
+                        type="date"
+                        format="YYYY/MM/DD"
+                        value-format="YYYY-MM-DD"
+                        placeholder="选择日期时间"
+                    >
+                    </el-date-picker>
+                  </td>
+                </tr>
+              </table>
             </el-card>
           </div>
           <div v-if="showSubmit == '1'" class="centerButton">
             <el-button type="primary" size="large" @click="doSumit()"
-              >提交
+            >提交
             </el-button>
           </div>
         </div>
@@ -347,8 +356,8 @@
 <script>
 import Navi from "@/components/Navi";
 
-import { generalRequest } from "@/service/genServ.js";
-import { getUimsConfig } from "@/service/genServ.js";
+import {generalRequest} from "@/service/genServ.js";
+import {getUimsConfig} from "@/service/genServ.js";
 
 export default {
   name: "BaseTable",
@@ -365,11 +374,13 @@ export default {
       currentPage: 1,
       pageSize: 20,
       showQuery: "",
+      showDescription: "",
       showAdd: "",
       loading: "",
       tableList: [],
       colsList: [],
-      querList: [],
+      queryList: [],
+      descriptionList: [],
       rootUrl: "teach",
       showPagination: "",
       name: "",
@@ -407,17 +418,31 @@ export default {
             // 判断是否定义了查询
             if (_self.page[i].query != undefined) {
               if (Array.isArray(_self.page[i].query)) {
-                _self.querList = _self.page[i].query;
+                _self.queryList = _self.page[i].query;
               } else {
                 let arr = [];
                 arr.push(_self.page[i].query);
-                _self.querList = arr;
+                _self.queryList = arr;
               }
               _self.showQuery = "1";
             } else {
               _self.showQuery = "";
             }
 
+            // 是否显示描述
+            if (_self.page[i].description != undefined) {
+              if (Array.isArray(_self.page[i].description)) {
+                _self.descriptionList = _self.page[i].description;
+              } else {
+                let arr = [];
+                arr.push(_self.page[i].description);
+                _self.descriptionList = arr;
+              }
+              _self.showDescription = "1";
+            } else {
+              _self.showDescription = "";
+            }
+            // 是否显示添加按钮
             _self.showAdd = _self.page[i].showAdd;
             // 判断是否支持翻页
             _self.showPagination = _self.page[i].showPagination;
@@ -445,8 +470,8 @@ export default {
                     _self.formList[i].value = _self.form[prop];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[prop + "List"] != undefined &&
-                        _self.form[prop + "List"] != ""
+                          _self.form[prop + "List"] != undefined &&
+                          _self.form[prop + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[prop + "List"];
                       }
@@ -482,15 +507,29 @@ export default {
               _self.colsList = _self.page[i].item;
               if (_self.page[i].query != undefined) {
                 if (Array.isArray(_self.page[i].query)) {
-                  _self.querList = _self.page[i].query;
+                  _self.queryList = _self.page[i].query;
                 } else {
                   let arr = [];
                   arr.push(_self.page[i].query);
-                  _self.querList = arr;
+                  _self.queryList = arr;
                 }
                 _self.showQuery = "1";
               } else {
                 _self.showQuery = "";
+              }
+
+              // 是否显示描述
+              if (_self.page[i].description != undefined) {
+                if (Array.isArray(_self.page[i].description)) {
+                  _self.descriptionList = _self.page[i].description;
+                } else {
+                  let arr = [];
+                  arr.push(_self.page[i].description);
+                  _self.descriptionList = arr;
+                }
+                _self.showDescription = "1";
+              } else {
+                _self.showDescription = "";
               }
               _self.showAdd = _self.page[i].showAdd;
               _self.showPagination = _self.page[i].showPagination;
@@ -515,8 +554,8 @@ export default {
                       _self.formList[i].value = _self.form[pro];
                       if (_self.formList[i].type == "select") {
                         if (
-                          _self.form[pro + "List"] != undefined &&
-                          _self.form[pro + "List"] != ""
+                            _self.form[pro + "List"] != undefined &&
+                            _self.form[pro + "List"] != ""
                         ) {
                           _self.formList[i].option = _self.form[pro + "List"];
                         }
@@ -570,16 +609,29 @@ export default {
                 _self.colsList = _self.page[i].item;
                 if (_self.page[i].query != undefined) {
                   if (Array.isArray(_self.page[i].query)) {
-                    _self.querList = _self.page[i].query;
+                    _self.queryList = _self.page[i].query;
                   } else {
                     let arr = [];
                     arr.push(_self.page[i].query);
-                    _self.querList = arr;
+                    _self.queryList = arr;
                   }
-
                   _self.showQuery = "1";
                 } else {
                   _self.showQuery = "";
+                }
+
+                // 是否显示描述
+                if (_self.page[i].description != undefined) {
+                  if (Array.isArray(_self.page[i].description)) {
+                    _self.descriptionList = _self.page[i].description;
+                  } else {
+                    let arr = [];
+                    arr.push(_self.page[i].description);
+                    _self.descriptionList = arr;
+                  }
+                  _self.showDescription = "1";
+                } else {
+                  _self.showDescription = "";
                 }
                 _self.showAdd = _self.page[i].showAdd;
                 _self.showPagination = _self.page[i].showPagination;
@@ -606,8 +658,8 @@ export default {
                         _self.formList[i].value = _self.form[pro];
                         if (_self.formList[i].type == "select") {
                           if (
-                            _self.form[pro + "List"] != undefined &&
-                            _self.form[pro + "List"] != ""
+                              _self.form[pro + "List"] != undefined &&
+                              _self.form[pro + "List"] != ""
                           ) {
                             _self.formList[i].option = _self.form[pro + "List"];
                           }
@@ -656,11 +708,11 @@ export default {
               _self.colsList = _self.page[i].item;
               if (_self.page[i].query != undefined) {
                 if (Array.isArray(_self.page[i].query)) {
-                  _self.querList = _self.page[i].query;
+                  _self.queryList = _self.page[i].query;
                 } else {
                   let arr = [];
                   arr.push(_self.page[i].query);
-                  _self.querList = arr;
+                  _self.queryList = arr;
                 }
 
                 _self.showQuery = "1";
@@ -693,8 +745,8 @@ export default {
                       _self.formList[i].value = _self.form[pro];
                       if (_self.formList[i].type == "select") {
                         if (
-                          _self.form[pro + "List"] != undefined &&
-                          _self.form[pro + "List"] != ""
+                            _self.form[pro + "List"] != undefined &&
+                            _self.form[pro + "List"] != ""
                         ) {
                           _self.formList[i].option = _self.form[pro + "List"];
                         }
@@ -712,7 +764,7 @@ export default {
       this.showForm = "1";
       this.showTable = "0";
       this.id = id;
-      var data = { id: id };
+      var data = {id: id};
       this.showSubmit = "1";
       var namePage = this.name + "Edit";
       let _self = this;
@@ -736,8 +788,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -753,7 +805,7 @@ export default {
     detailRow(id) {
       this.showForm = "1";
       this.showTable = "0";
-      var data = { id: id };
+      var data = {id: id};
       this.id = id;
       this.showSubmit = "0";
       var namePage = this.name + "Edit";
@@ -778,8 +830,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }
@@ -799,7 +851,7 @@ export default {
           this.index = i;
         }
       }
-      var data = { id: id };
+      var data = {id: id};
       this.tableList.splice(this.index, 1);
       generalRequest(url, data).then((res) => {
         if (res.code == 0) {
@@ -815,20 +867,21 @@ export default {
     queryTable() {
       var url = "/api/" + this.rootUrl + "/" + this.name + "Query";
       var data = {};
-      for (var i = 0; i < this.querList.length; i++) {
+      for (var i = 0; i < this.queryList.length; i++) {
         var obj = {};
-        var key = this.querList[i].prop;
-        var value = this.querList[i].value;
+        var key = this.queryList[i].prop;
+        var value = this.queryList[i].value;
         obj[key] = value;
         Object.assign(data, obj);
       }
+      console.log(data);
       generalRequest(url, data).then((res) => {
         this.tableList = res.data.data;
       });
     },
 
     doSumit() {
-      var data = { id: this.id };
+      var data = {id: this.id};
       for (var i = 0; i < this.formList.length; i++) {
         var obj = {};
         var key = this.formList[i].prop;
@@ -837,7 +890,7 @@ export default {
         Object.assign(data, obj);
       }
       var url = "/api/" + this.rootUrl + "/" + this.name + "Submit";
-      generalRequest(url, { form: data }).then((res) => {
+      generalRequest(url, {form: data}).then((res) => {
         if (res.code == 0) {
           this.id = res.data.data.id;
           this.$message({
@@ -879,8 +932,8 @@ export default {
                     _self.formList[i].value = _self.form[pro];
                     if (_self.formList[i].type == "select") {
                       if (
-                        _self.form[pro + "List"] != undefined &&
-                        _self.form[pro + "List"] != ""
+                          _self.form[pro + "List"] != undefined &&
+                          _self.form[pro + "List"] != ""
                       ) {
                         _self.formList[i].option = _self.form[pro + "List"];
                       }

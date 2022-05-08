@@ -44,11 +44,31 @@ function getStudentIntroduceData(data) {
     return generalRequest('/api/teach/getStudentIntroduceData', data)
 }
 
-
+function getPdf(data) {
+    return generalRequest('/api/teach/getStudentIntroducePdf', data)
+        .then(async response => {
+            const blob = await response.blob()
+            // check for error response
+            if (!response.ok) {
+                // get error message from body or default to response status
+                const error = response.status;
+                return Promise.reject(error)
+            }
+            const link = document.createElement('a')
+            link.href = URL.createObjectURL(blob)
+            link.download = "个人简历"
+            link.click()
+            URL.revokeObjectURL(link.href)
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+}
 export {
     generalRequest,
     getStudentIntroduceData,
-    getUimsConfig
+    getUimsConfig,
+    getPdf,
 }
 
 
@@ -68,7 +88,6 @@ export function downloadPost(url, label, data) {
     return fetch(url, requestOptions)
         .then(async response => {
             const blob = await response.blob()
-
             // check for error response
             if (!response.ok) {
                 // get error message from body or default to response status

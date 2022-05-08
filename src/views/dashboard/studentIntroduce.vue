@@ -25,7 +25,7 @@
         </div>
       </el-header>
       <el-main>
-        <div class="aboutus">
+        <div class="about">
           <el-card class="box-card">
             <div class="card-header">基本信息</div>
             <div
@@ -53,31 +53,12 @@
                 "
               >
                 <div>姓名： {{ myName }}</div>
-                <div>简介： {{ overview }}</div>
+                <div>性别： {{ sex }}</div>
+                <div>年龄： {{ age }}</div>
+                <div>学院专业： {{ overview }}</div>
+                <div>学号： {{ studentNum }}</div>
+                <div>联系方式： {{ contact }}</div>
               </div>
-            </div>
-          </el-card>
-
-          <el-card class="box-card">
-            <div
-              class="item"
-              style="
-                display: flex;
-                flex-direction: column;
-                align-content: start;
-                align-items: start;
-              "
-            >
-              <el-row
-                type="flex"
-                style="margin-left: 12px; margin-right: 12px; width: 100%"
-                :gutter="110"
-                v-for="(item, i) in attachList"
-                :key="i"
-              >
-                <p>{{ item.title }}</p>
-                <p v-html="item.content"></p>
-              </el-row>
             </div>
           </el-card>
           <el-card class="box-card">
@@ -120,6 +101,29 @@
                 :chartId="lifeChartId"
                 style="width: 400px"
               />
+            </div>
+          </el-card>
+
+          <el-card class="box-card">
+            <div
+                class="item"
+                style="
+                display: flex;
+                flex-direction: column;
+                align-content: start;
+                align-items: start;
+              "
+            >
+              <el-row
+                  type="flex"
+                  style="margin-left: 12px; margin-right: 12px; width: 100%"
+                  :gutter="110"
+                  v-for="(item, i) in attachList"
+                  :key="i"
+              >
+                <div class="paragraph-header">{{ item.title }}</div>
+                <div v-html="item.content"></div>
+              </el-row>
             </div>
           </el-card>
           <el-button style="margin-top: 12px" size="primary" @click="downPDF()"
@@ -191,6 +195,10 @@ export default {
     getStudentIntroduceData({ ...this.objectPush }).then((res) => {
       this.myName = res.data.data.myName;
       this.overview = res.data.data.overview;
+      this.sex = res.data.data.sex;
+      this.age = res.data.data.age;
+      this.studentNum = res.data.data.studentNum;
+      this.contact = res.data.data.contact;
       this.img_url = res.data.data.img_url;
       this.studyChartLoaded = "true";
       this.lifeChartLoaded = "true";
@@ -200,6 +208,7 @@ export default {
       this.lifeChartData.datasets = res.data.data.lifeChartData;
       this.lifeChartData.backgroundColor = res.data.data.lifeChartColors;
       this.attachList = res.data.data.attachList;
+      this.basicList = res.data.data.basicList;
     });
   },
   data() {
@@ -226,13 +235,18 @@ export default {
       objectPush: "",
       myName: "",
       overview: "",
+      sex:"",
+      age:"",
+      studentNum:"",
+      contact:"",
       attachList: "",
+      basicList: "",
     };
   },
   methods: {
     downPDF() {
       downloadPost(
-        "http:/localhost:9090/api/teach/getStudentIntroducePdf",
+        "/api/teach/getStudentIntroducePdf",
         "个人简历",
         { ...this.objectPush }
       );
@@ -246,7 +260,7 @@ html {
   width: 100%;
 }
 
-.aboutus {
+.about {
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -255,6 +269,16 @@ html {
 
 .card-header {
   font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paragraph-header {
+  margin-right: 24px;
+  width: 64px;
+  font-size: 14px;
   font-weight: bold;
   display: flex;
   justify-content: space-between;

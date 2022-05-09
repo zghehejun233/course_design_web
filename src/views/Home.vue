@@ -12,9 +12,16 @@
             <el-card class="box-card">
               <div class="card-header">
                 <span>项目简介</span>
-                <el-button class="button" type="text" >Operation button</el-button>
               </div>
-              <div v-for="o in 4" :key="o" class="text item"  style="font-size: 14px">{{ 'List item ' + o }}</div>
+              <div  class="text item"  style="font-size: 14px">
+                真的不知道该写啥了这里<br>
+                本来应该有点内容的<br>
+                写点总结啦简介啥的<br>
+                但是我麻了<br>
+                大概意思就是这么个意思<br>
+                摆烂鸟<br>
+                <div align="right">2022.20.17</div>
+              </div>
             </el-card>
           </div>
           <div
@@ -67,8 +74,9 @@ html {
 }
 
 .box-card {
+  padding: 12px;
   width: 720px;
-  height: 960px;
+  height: 480px;
 }
 
 .home {

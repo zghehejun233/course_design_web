@@ -20,7 +20,19 @@
                 但是我麻了<br>
                 大概意思就是这么个意思<br>
                 摆烂鸟<br>
-                <div align="right">2022.20.17</div>
+                <div align="right">2022.5.9</div>
+              </div>
+              <div class="card-header">
+                <span>致谢</span>
+              </div>
+              <div  class="text item"  style="font-size: 14px">
+                再次感谢所有帮助过本项目的同学和资料作者<br>
+                包括但不限于<br>
+                zsb lsp zwn<br>
+                whc lhs ljc<br>
+                ...<br>
+                所有资料及引用保存在<a href="http://47.100.74.245/blog/posts/22597/">个人博客</a><br>
+                项目托管在<a href="https://github.com/zghehejun233/518_java_course_design">Github</a>，Gitee作为备份
               </div>
             </el-card>
           </div>
@@ -50,7 +62,7 @@ export default {
     },
     downPDF() {
       downloadPost(
-          "http://localhost:9090/api/teach/printStudentIntroduce",
+          "http://47.100.74.245/api/teach/printStudentIntroduce",
           "个人简历"
       );
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <div class="title">学生信息管理系统</div>
+    <div class="title">student-info-client</div>
     <el-card style="width: 320px; height: 360px">
       <el-form class="login-form" autocomplete="on" label-position="left">
         <el-input

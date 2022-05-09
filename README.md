@@ -1,4 +1,4 @@
-# teach-client
+# student-info-client
 
 The client is created with Vue3 + Vuex + Axios
 
